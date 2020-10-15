@@ -19,6 +19,7 @@ public class ServerConnection extends Thread{
 
     public void SendStringToBroker(String reply){
         out.println(reply);
+        System.out.println(reply);
         out.flush();
     }
 
@@ -34,7 +35,6 @@ public class ServerConnection extends Thread{
     public void run(){//overwriting the run() function in thread
         in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         //Reading data from broker
-        System.out.println("Client data: " + str);
 
 //                String str2 = str.substring(0, 3);
 
