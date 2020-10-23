@@ -11,12 +11,11 @@ public class Broker {
     private static int qty = 0;
     private static int price =0;
     private static String message;
-    private static String[] id;
+    private static int[] id;
     private static String checksum;
     private static Scanner scanner;
     private static int choice = 0;
     public static void main(String args[])throws Exception{
-
 
         String ip = "localhost";
         int port = 5000;
@@ -31,7 +30,7 @@ public class Broker {
         boolean idRecieved = true;
 
         //get id
-       while(idRecieved){
+        while(idRecieved){
             System.out.println("waiting for broker to connect...");
             try{
                 id = readId(s);
@@ -49,7 +48,7 @@ public class Broker {
         fixStart = "8=FIX.4.2|";
 
         while(ask){
-            scanner = new Scanner(System.in);  // Create a Scanner object
+             scanner = new Scanner(System.in);  // Create a Scanner object
             System.out.println("\nDo you want to buy or sell?\n" +
                     "1. Buy\n" +
                     "2. Sell\n" +
@@ -137,7 +136,7 @@ public class Broker {
     }
 
     public static String buy(int choice, ArrayList<Instruments> instruments){
-        scanner = new Scanner(System.in);
+         scanner = new Scanner(System.in);
 
         if (choice == 1) {
             type = 0;
@@ -178,7 +177,7 @@ public class Broker {
                 return null;
             }
             System.out.println("Enter your price");
-            // price = scanner.nextInt();
+           // price = scanner.nextInt();
             checkPrice();
             if (price == 0){
                 return null;
@@ -280,7 +279,7 @@ public class Broker {
                 return null;
             }else{
                 System.out.println("Enter your price");
-                // price = scanner.nextInt();
+               // price = scanner.nextInt();
                 checkPrice();
                 if (price == 0){
                     return null;
@@ -374,4 +373,3 @@ public class Broker {
             price = 0;
         }
     }
-}
