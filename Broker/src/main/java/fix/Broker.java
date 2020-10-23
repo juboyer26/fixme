@@ -31,25 +31,18 @@ public class Broker {
         boolean idRecieved = true;
 
         //get id
-        while(idRecieved){
+       while(idRecieved){
             System.out.println("waiting for broker to connect...");
-            id = readId(s);
-            if(id[0].length() == 6){
-                count++;
-                if(id[1].length() == 6){
-                    count++;
-                    System.out.println("broker id " + id[0]);
-                    System.out.println("market id " + id[1]);
-                    break;
-                }else{
-                    System.out.println("Couldnt get market id");
-                }
-            }else{
-                System.out.println("Couldnt get broker id");
+            try{
+                id = readId(s);
+                System.out.println("broker id " + id[0]);
+                System.out.println("market id " + id[1]);
+                break;
+            }catch (Exception e){
+                System.out.println("Error getting id");
+                System.exit(1);
             }
         }
-
-
 
         //list of all brokers assets
         instruments = initializer.setInstruments(); //init instrument
@@ -325,13 +318,13 @@ public class Broker {
         return(str);
     }
 
-    public static String[] readId(Socket s){
-        String[] ids = {null, null};
+    public static int[] readId(Socket s){
+        int[] ids = {0, 0};
         System.out.println("Reading ...");
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
-            ids[0] = br.readLine();
-            ids[1] = br.readLine();
+            ids[0] = Integer.parseInt(br.readLine());
+            ids[1] = Integer.parseInt(br.readLine());
         } catch (IOException e) {
             e.printStackTrace();
         }
