@@ -7,6 +7,7 @@ import fix.InitInstruments;
 
 public class Broker {
 
+    private static int type = 0;
     private static int qty = 0;
     private static int price =0;
     private static String message;
@@ -30,25 +31,18 @@ public class Broker {
         boolean idRecieved = true;
 
         //get id
-        while(idRecieved){
+       while(idRecieved){
             System.out.println("waiting for broker to connect...");
-            id = readId(s);
-            if(id[0].length() == 6){
-                count++;
-                if(id[1].length() == 6){
-                    count++;
-                    System.out.println("broker id " + id[0]);
-                    System.out.println("market id " + id[1]);
-                    break;
-                }else{
-                    System.out.println("Couldnt get market id");
-                }
-            }else{
-                System.out.println("Couldnt get broker id");
+            try{
+                id = readId(s);
+                System.out.println("broker id " + id[0]);
+                System.out.println("market id " + id[1]);
+                break;
+            }catch (Exception e){
+                System.out.println("Error getting id");
+                System.exit(1);
             }
         }
-
-
 
         //list of all brokers assets
         instruments = initializer.setInstruments(); //init instrument
@@ -71,7 +65,6 @@ public class Broker {
                 for(int i = 0; i < instruments.size(); i++) {
                     String inst = i+1 + ". Name: " + instruments.get(i).getName();
                     System.out.println(inst);
-
                 }
                 if(!checkOption()){
                     continue;
@@ -85,17 +78,18 @@ public class Broker {
                 fixMsg = fixMsg + checksum;
                 System.out.println("FIX MESSAGE " + fixMsg);
                 sendMsg(s, fixMsg);
-                checksum = null;
-                fixMsg = null;
 
                 //wait for reply then do XYZ
-                String test = readMsg(s);
-                //System.out.println("returned msg " + test);
-                //get message and if rejected
-                //continue
-                //else if accepted
-                //add values to broker
-
+                String response = readMsg(s);
+                if(response.equals("accepted")){
+                    instruments.get(type).setQuantity(instruments.get(type).getQuantity() + qty);
+                    System.out.println("accepted");
+                }else if(response.equals("rejected")){
+                    continue;
+                }else{
+                    System.out.println("Error, invalid response");
+                    continue;
+                }
 
             }else if(choice == 2){
                 System.out.println("These are your available assets, please select an asset you want to sell");
@@ -115,18 +109,19 @@ public class Broker {
                 fixMsg = fixMsg + checksum;
                 System.out.println("FIX MESSAGE " + fixMsg);
                 sendMsg(s, fixMsg);
-                checksum = null;
-                fixMsg = null;
-
 
                 //wait for reply then do XYZ
-                String test = readMsg(s);
-                //System.out.println("returned msg " + test);
-                //get message and if rejected
-                //continue
-                //else if accepted
-                //add values to broker
-
+                String response = readMsg(s);
+                if(response.equals("accepted")){
+                    instruments.get(type).setQuantity(instruments.get(type).getQuantity() - qty);
+                    System.out.println("accepted");
+                    //add values to broker
+                }else if(response.equals("rejected")){
+                    continue;
+                }else{
+                    System.out.println("Error, invalid response");
+                    continue;
+                }
 
             }else if(choice == 3){
                 ask = false;
@@ -145,6 +140,7 @@ public class Broker {
         scanner = new Scanner(System.in);
 
         if (choice == 1) {
+            type = 0;
             System.out.println("Please select the amount of " + instruments.get(0).getName() + " you would like to buy");
             //qty = scanner.nextInt();
             checkQty();
@@ -159,6 +155,7 @@ public class Broker {
             }
             message = "35=D|49="+id[0]+"|56="+id[1]+"|52="+ Instant.now().toString()+"|54="+1+"|40="+1+"|38="+qty+"|44="+price+"|39=1";
         }else if (choice == 2) {
+            type = 1;
             System.out.println("Please select the amount of " + instruments.get(1).getName() + " you would like to buy");
             //qty = scanner.nextInt();
             checkQty();
@@ -173,6 +170,7 @@ public class Broker {
             }
             message = "35=D|49="+id[0]+"|56="+id[1]+"|52="+ Instant.now().toString()+"|54="+1+"|40="+2+"|38="+qty+"|44="+price+"|39=1";
         }else if (choice == 3) {
+            type = 2;
             System.out.println("Please select the amount of " + instruments.get(2).getName() + " you would like to buy");
             //qty = scanner.nextInt();
             checkQty();
@@ -188,6 +186,7 @@ public class Broker {
             message = "35=D|49="+id[0]+"|56="+id[1]+"|52="+ Instant.now().toString()+"|54="+1+"|40="+3+"|38="+qty+"|44="+price+"|39=1";
         }
         else if (choice == 4) {
+            type = 3;
             System.out.println("Please select the amount of " + instruments.get(3).getName() + " you would like to buy");
             //qty = scanner.nextInt();
             checkQty();
@@ -212,6 +211,7 @@ public class Broker {
         scanner = new Scanner(System.in);
 
         if (choice == 1) {
+            type = 0;
             System.out.println("Please select the amount of " + instruments.get(0).getName() + " you would like to sell");
             //qty = scanner.nextInt();
             checkQty();
@@ -230,6 +230,7 @@ public class Broker {
                 message = "35=D|49="+id[0]+"|56="+id[1]+"|52="+ Instant.now().toString()+"|54="+2+"|40="+4+"|38="+qty+"|44="+price+"|39=1";
             }
         }else if (choice == 2) {
+            type = 1;
             System.out.println("Please select the amount of " + instruments.get(1).getName() + " you would like to sell");
             //qty = scanner.nextInt();
             checkQty();
@@ -248,6 +249,7 @@ public class Broker {
                 message = "35=D|49="+id[0]+"|56="+id[1]+"|52="+ Instant.now().toString()+"|54="+2+"|40="+4+"|38="+qty+"|44="+price+"|39=1";
             }
         }else if (choice == 3) {
+            type = 2;
             System.out.println("Please select the amount of " + instruments.get(2).getName() + " you would like to sell");
             //qty = scanner.nextInt();
             checkQty();
@@ -267,6 +269,7 @@ public class Broker {
             }
         }
         else if (choice == 4) {
+            type = 3;
             System.out.println("Please select the amount of " + instruments.get(3).getName() + " you would like to sell");
             //qty = scanner.nextInt();
             checkQty();
@@ -315,13 +318,13 @@ public class Broker {
         return(str);
     }
 
-    public static String[] readId(Socket s){
-        String[] ids = {null, null};
+    public static int[] readId(Socket s){
+        int[] ids = {0, 0};
         System.out.println("Reading ...");
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
-            ids[0] = br.readLine();
-            ids[1] = br.readLine();
+            ids[0] = Integer.parseInt(br.readLine());
+            ids[1] = Integer.parseInt(br.readLine());
         } catch (IOException e) {
             e.printStackTrace();
         }
