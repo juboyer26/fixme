@@ -33,7 +33,7 @@ public class Router {
                 BrokerList.add(sc);
                 brokerid = 100000 + (int)(Math.random() * ((499999 - 100000) + 1));
             } catch (IOException e) {
-                System.out.println("Broker connection to Router error: " + e.getMessage());
+                System.out.println("Broker connection to Router error: " + e.getMessage()+ "\n Make sure you connect a broker first before trying to connect a market");
             }
 
             try (ServerSocket market = new ServerSocket(5001)) {
@@ -52,3 +52,4 @@ public class Router {
 //        System.exit(1);
     }
 }
+
