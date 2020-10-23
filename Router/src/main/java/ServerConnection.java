@@ -11,6 +11,7 @@ public class ServerConnection extends Thread{
     OutputStreamWriter os;
     PrintWriter out;
     String str;
+    
     public ServerConnection(Socket socket, Router router){
         super("ServerConnectionThread");
         this.socket = socket;

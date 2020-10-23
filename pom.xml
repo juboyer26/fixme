@@ -8,6 +8,7 @@
     <artifactId>FIX-me</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -15,6 +16,7 @@
             <version>1.18.10</version>
         </dependency>
     </dependencies>
+    
     <build>
         <finalName>FIX-ME</finalName>
         <plugins>
@@ -52,7 +54,7 @@
     <modules>
         <module>Router</module>
         <module>Market</module>
-        <module>Broker</module>
+        <!-- <module>Broker</module> -->
     </modules>
 
     <properties>

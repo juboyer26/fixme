@@ -28,15 +28,15 @@ public class Router {
         while(true) {
             System.out.println("Server waiting for request\ntype quit to close Router");
 
-            try (ServerSocket broker = new ServerSocket(5000)) {
-                s = broker.accept();
-                System.out.println("Broker accepted");
-                ServerConnection sc = new ServerConnection(s,this);//makes using multiple brokers and markets threads at the same time
-                sc.start();//starting thread
-                connections.add(sc);
-            } catch (IOException e) {
-                System.out.println("Broker connection to Router error: " + e.getMessage());
-            }
+            // try (ServerSocket broker = new ServerSocket(5000)) {
+            //     s = broker.accept();
+            //     System.out.println("Broker accepted");
+            //     ServerConnection sc = new ServerConnection(s,this);//makes using multiple brokers and markets threads at the same time
+            //     sc.start();//starting thread
+            //     connections.add(sc);
+            // } catch (IOException e) {
+            //     System.out.println("Broker connection to Router error: " + e.getMessage());
+            // }
 
             try (ServerSocket market = new ServerSocket(5001)) {
                 s = market.accept();
