@@ -35,34 +35,28 @@ public class Market {
 
         while (true) {
             String instruction = br.readLine();
-            if (instruction == null) {
+            if (instruction.equals("quit")){
                 br.close();
                 break;
             }
-            System.out.println("Instruction recieved: " + instruction);
             extract(instruction);
 
             if (orderType.equals("1")) { //BUY
                 if (instrumentType.equals("1")) {//GOLD
                     if ((gold.getQuantity() >= Integer.parseInt(amount)) && (Integer.parseInt(price) >= gold.getPrice())) {
-                        System.out.println("Gold Order: " + amount);
                         System.out.println("Gold Quantity Available: " + gold.getQuantity());
-                        System.out.println("You can buy Gold");
 
-                        //send response to router
-//                        dataSentToRouter = "8=FIX.4.2|35=D|49=BROKERID|56=MARKETID|52=TIME|54=1|38=500|44=100|39=1|41=1|CHECKSUM";
                         dataSentToRouter = "accepted";
                         OutputStreamWriter os = new OutputStreamWriter(marketSocket.getOutputStream());
                         PrintWriter printWriter = new PrintWriter(os);
                         printWriter.println(dataSentToRouter);
                         printWriter.flush();
 
-                        //update instrument
                         gold.setQuantity(gold.getQuantity() - Integer.parseInt(amount));
-                        System.out.println("Gold Quantity after execution: " + gold.getQuantity());
+                        System.out.println("Gold Quantity after sale to broker: " + gold.getQuantity());
                     } else {
-                        dataSentToRouter = "rejected|quantity not available or price is too low";
-                        System.out.println("REJECTED GOLD ORDER");
+                        dataSentToRouter = "rejected|quantity not available or price is too low. Quantity available: "+ gold.getQuantity()
+                        + " @ Price of R" + gold.getPrice();
                         OutputStreamWriter os = new OutputStreamWriter(marketSocket.getOutputStream());
                         PrintWriter printWriter = new PrintWriter(os);
                         printWriter.println(dataSentToRouter);
@@ -71,23 +65,19 @@ public class Market {
                 }
                 if (instrumentType.equals("2")) {//SILVER
                     if ((silver.getQuantity() >= Integer.parseInt(amount)) && (Integer.parseInt(price) >= silver.getPrice())) {
-                        System.out.println("Silver Order: " + amount);
                         System.out.println("Silver Quantity Available: " + silver.getQuantity());
-                        System.out.println("You can buy silver");
 
-                        //send response to router
                         dataSentToRouter = "accepted";
                         OutputStreamWriter os = new OutputStreamWriter(marketSocket.getOutputStream());
                         PrintWriter printWriter = new PrintWriter(os);
                         printWriter.println(dataSentToRouter);
                         printWriter.flush();
 
-                        //update instrument
                         silver.setQuantity(silver.getQuantity() - Integer.parseInt(amount));
-                        System.out.println("Quantity after execution: " + silver.getQuantity());
+                        System.out.println("Silver Quantity available after sale to broker : " + silver.getQuantity());
                     } else {
-                        dataSentToRouter = "rejected|quantity not available or price is too low";
-                        System.out.println("REJECTED SILVER ORDER");
+                        dataSentToRouter = "rejected|quantity not available or price is too low + \n Quantity available: "+ silver.getQuantity()
+                                + " @ Price of R" + silver.getPrice();
                         OutputStreamWriter os = new OutputStreamWriter(marketSocket.getOutputStream());
                         PrintWriter printWriter = new PrintWriter(os);
                         printWriter.println(dataSentToRouter);
@@ -95,25 +85,31 @@ public class Market {
                     }
                 }
             }else if (orderType.equals("2")){//SELL
-                if (instrumentType.equals("1")){//GOLD
-                    System.out.println("GOLD BEFORE SELL: "+ gold.getQuantity());
+                if (instrumentType.equals("1") && (Integer.parseInt(price) < gold.getPrice())){//GOLD
+                    System.out.println("GOLD BEFORE BUY BACK FROM BROKER: "+ gold.getQuantity());
                     gold.setQuantity(gold.getQuantity()+ Integer.parseInt(amount));
-                    System.out.println("GOLD INCREASED: " + gold.getQuantity());
+                    System.out.println("GOLD AFTER BUY BACK: " + gold.getQuantity());
 
                     dataSentToRouter = "accepted";
-                    System.out.println("EXE GOLD SALE");
                     OutputStreamWriter os = new OutputStreamWriter(marketSocket.getOutputStream());
                     PrintWriter printWriter = new PrintWriter(os);
                     printWriter.println(dataSentToRouter);
                     printWriter.flush();
                 }
-                if (instrumentType.equals("2")){//SILVER
-                    System.out.println("SILVER BEFORE SELL: "+ silver.getQuantity());
+                else if (instrumentType.equals("2") && (Integer.parseInt(price) < silver.getPrice())){//SILVER
+                    System.out.println("SILVER BEFORE BUY BACK: "+ silver.getQuantity());
                     silver.setQuantity(silver.getQuantity()+ Integer.parseInt(amount));
-                    System.out.println("SILVER INCREASED: " + silver.getQuantity());
+                    System.out.println("SILVER AFTER BUY BACK: " + silver.getQuantity());
 
                     dataSentToRouter = "accepted";
-                    System.out.println("EXEC SILVER SALE");
+                    OutputStreamWriter os = new OutputStreamWriter(marketSocket.getOutputStream());
+                    PrintWriter printWriter = new PrintWriter(os);
+                    printWriter.println(dataSentToRouter);
+                    printWriter.flush();
+                }
+                else {
+                    dataSentToRouter = "rejected|market will only buy instrument for a price lower than current market price... Gold price: R"
+                    + gold.getPrice() +"...Silver Price: R" + silver.getPrice();
                     OutputStreamWriter os = new OutputStreamWriter(marketSocket.getOutputStream());
                     PrintWriter printWriter = new PrintWriter(os);
                     printWriter.println(dataSentToRouter);
@@ -125,10 +121,8 @@ public class Market {
 
     }
     public static void extract(String input){
-//        String input = "8=FIX.4.2|35=D|49=BROKERID|56=MARKETID|52=TIME|54=1|38=500|44=100|39=1|41=1|CHECKSUM";
         //8=FIX.4.2|35=D|49=304635|56=908440|52=2020-10-26T12:59:17.767104900Z|54=1|40=1|38=1|44=1|39=1|10=59
         String[] msgs = input.split("\\|");
-        System.out.println("X: " + input);
 
         amount = msgs[7].substring(3); //Quantity     38
         price = msgs[8].substring(3); // Price      44
