@@ -179,36 +179,36 @@ public class Broker {
                 return null;
             }
             message = "35=D|49=" + id[0] + "|56=" + id[1] + "|52=" + Instant.now().toString() + "|54=" + 1 + "|40=" + 2 + "|38=" + qty + "|44=" + price + "|39=1";
-        } else if (choice == 3) {
-            type = 2;
-            System.out.println("Please select the amount of " + instruments.get(2).getName() + " you would like to buy");
-            //qty = scanner.nextInt();
-            checkQty();
-            if (qty == 0) {
-                return null;
-            }
-            System.out.println("Enter your price");
-            // price = scanner.nextInt();
-            checkPrice();
-            if (price == 0) {
-                return null;
-            }
-            message = "35=D|49=" + id[0] + "|56=" + id[1] + "|52=" + Instant.now().toString() + "|54=" + 1 + "|40=" + 3 + "|38=" + qty + "|44=" + price + "|39=1";
-        } else if (choice == 4) {
-            type = 3;
-            System.out.println("Please select the amount of " + instruments.get(3).getName() + " you would like to buy");
-            //qty = scanner.nextInt();
-            checkQty();
-            if (qty == 0) {
-                return null;
-            }
-            System.out.println("Enter your price");
-            //price = scanner.nextInt();
-            checkPrice();
-            if (price == 0) {
-                return null;
-            }
-            message = "35=D|49=" + id[0] + "|56=" + id[1] + "|52=" + Instant.now().toString() + "|54=" + 1 + "|40=" + 4 + "|38=" + qty + "|44=" + price + "|39=1";
+//        } else if (choice == 3) {
+//            type = 2;
+//            System.out.println("Please select the amount of " + instruments.get(2).getName() + " you would like to buy");
+//            //qty = scanner.nextInt();
+//            checkQty();
+//            if (qty == 0) {
+//                return null;
+//            }
+//            System.out.println("Enter your price");
+//            // price = scanner.nextInt();
+//            checkPrice();
+//            if (price == 0) {
+//                return null;
+//            }
+//            message = "35=D|49=" + id[0] + "|56=" + id[1] + "|52=" + Instant.now().toString() + "|54=" + 1 + "|40=" + 3 + "|38=" + qty + "|44=" + price + "|39=1";
+//        } else if (choice == 4) {
+//            type = 3;
+//            System.out.println("Please select the amount of " + instruments.get(3).getName() + " you would like to buy");
+//            //qty = scanner.nextInt();
+//            checkQty();
+//            if (qty == 0) {
+//                return null;
+//            }
+//            System.out.println("Enter your price");
+//            //price = scanner.nextInt();
+//            checkPrice();
+//            if (price == 0) {
+//                return null;
+//            }
+//            message = "35=D|49=" + id[0] + "|56=" + id[1] + "|52=" + Instant.now().toString() + "|54=" + 1 + "|40=" + 4 + "|38=" + qty + "|44=" + price + "|39=1";
         } else {
             System.out.println("Invalid asset selected");
             return null;
@@ -259,46 +259,46 @@ public class Broker {
                 }
                 message = "35=D|49=" + id[0] + "|56=" + id[1] + "|52=" + Instant.now().toString() + "|54=" + 2 + "|40=" + 2 + "|38=" + qty + "|44=" + price + "|39=1";
             }
-        } else if (choice == 3) {
-            type = 2;
-            System.out.println("Please select the amount of " + instruments.get(2).getName() + " you would like to sell");
-            //qty = scanner.nextInt();
-            checkQty();
-            if (qty > instruments.get(2).getQuantity()) {
-                System.out.println("You do not have enough " + instruments.get(2).getName() + " please buy some first");
-                return null;
-            } else if (qty <= 0) {
-                System.out.println("Please select a valid amount");
-                return null;
-            } else {
-                System.out.println("Enter your price");
-                //price = scanner.nextInt();
-                checkPrice();
-                if (price == 0) {
-                    return null;
-                }
-                message = "35=D|49=" + id[0] + "|56=" + id[1] + "|52=" + Instant.now().toString() + "|54=" + 2 + "|40=" + 3 + "|38=" + qty + "|44=" + price + "|39=1";
-            }
-        } else if (choice == 4) {
-            type = 3;
-            System.out.println("Please select the amount of " + instruments.get(3).getName() + " you would like to sell");
-            //qty = scanner.nextInt();
-            checkQty();
-            if (qty > instruments.get(3).getQuantity()) {
-                System.out.println("You do not have enough " + instruments.get(3).getName() + " please buy some first");
-                return null;
-            } else if (qty <= 0) {
-                System.out.println("Please select a valid amount");
-                return null;
-            } else {
-                System.out.println("Enter your price");
-                // price = scanner.nextInt();
-                checkPrice();
-                if (price == 0) {
-                    return null;
-                }
-                message = "35=D|49=" + id[0] + "|56=" + id[1] + "|52=" + Instant.now().toString() + "|54=" + 2 + "|40=" + 4 + "|38=" + qty + "|44=" + price + "|39=1";
-            }
+//        } else if (choice == 3) {
+//            type = 2;
+//            System.out.println("Please select the amount of " + instruments.get(2).getName() + " you would like to sell");
+//            //qty = scanner.nextInt();
+//            checkQty();
+//            if (qty > instruments.get(2).getQuantity()) {
+//                System.out.println("You do not have enough " + instruments.get(2).getName() + " please buy some first");
+//                return null;
+//            } else if (qty <= 0) {
+//                System.out.println("Please select a valid amount");
+//                return null;
+//            } else {
+//                System.out.println("Enter your price");
+//                //price = scanner.nextInt();
+//                checkPrice();
+//                if (price == 0) {
+//                    return null;
+//                }
+//                message = "35=D|49=" + id[0] + "|56=" + id[1] + "|52=" + Instant.now().toString() + "|54=" + 2 + "|40=" + 3 + "|38=" + qty + "|44=" + price + "|39=1";
+//            }
+//        } else if (choice == 4) {
+//            type = 3;
+//            System.out.println("Please select the amount of " + instruments.get(3).getName() + " you would like to sell");
+//            //qty = scanner.nextInt();
+//            checkQty();
+//            if (qty > instruments.get(3).getQuantity()) {
+//                System.out.println("You do not have enough " + instruments.get(3).getName() + " please buy some first");
+//                return null;
+//            } else if (qty <= 0) {
+//                System.out.println("Please select a valid amount");
+//                return null;
+//            } else {
+//                System.out.println("Enter your price");
+//                // price = scanner.nextInt();
+//                checkPrice();
+//                if (price == 0) {
+//                    return null;
+//                }
+//                message = "35=D|49=" + id[0] + "|56=" + id[1] + "|52=" + Instant.now().toString() + "|54=" + 2 + "|40=" + 4 + "|38=" + qty + "|44=" + price + "|39=1";
+//            }
         } else {
             System.out.println("Invalid asset selected");
             return null;
