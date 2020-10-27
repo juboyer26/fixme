@@ -14,7 +14,6 @@ public class ServerConnection extends Thread{
     boolean idSent = false;
     int i;
     boolean close = false;
-    boolean check;
 
     public ServerConnection(Socket socket, Router router){
         super("ServerConnectionThread");
@@ -23,28 +22,23 @@ public class ServerConnection extends Thread{
     }
 
     public void SendID(int brID, int mrID){
-        System.out.println(brID);
         out.println(brID);
         out.flush();
-        System.out.println(mrID);
         out.println(mrID);
         out.flush();
     }
     public void SendString(String reply){
-        System.out.println(reply);
         out.println(reply);
         out.flush();
     }
 
     public static String readMsg(Socket s, boolean close){
         String str = null;
-        System.out.println("Waiting for data from broker");
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
             str = br.readLine();
             if (close) {
                 br.close();
-                System.out.println("buffer closed");
             }
 
         } catch (IOException e) {
@@ -77,7 +71,9 @@ public class ServerConnection extends Thread{
             String msg;
             if (!idSent){
                 br.SendID(router.brokerid, router.marketid);
+                System.out.println("Broker ID:"+ router.brokerid);
                 mr.SendID(router.brokerid, router.marketid);
+                System.out.println("Market ID:"+ router.marketid);
                 msg = br.readMsg(br.socket, close);
                 if (!msg.equals("quit") && checksum(msg)) {
                     mr.SendString(msg);
@@ -87,7 +83,6 @@ public class ServerConnection extends Thread{
                 if (msg.equals("quit")){
                     mr.SendString(msg);
                     close = true;
-                    System.out.println("broker ID: "+router.brokerid+"closed");
                 }
                 idSent = true;
             }
@@ -102,7 +97,6 @@ public class ServerConnection extends Thread{
                     end = begin + 6;
                     tid = msg.substring(begin, end);
                     mid = Integer.parseInt(tid);
-                    System.out.println("Broker ID in Server is: " + bid + " Market ID inn server is: " + mid);
                     if (router.pair.containsKey(bid)) {
                         mr.SendString(msg);
                         msg = mr.readMsg(mr.socket, close);
@@ -111,7 +105,8 @@ public class ServerConnection extends Thread{
                 }
                 if (msg.equals("quit")) {
                     mr.SendString(msg);
-                    System.out.println("Market ID: " + router.marketid + "closed");
+                    System.out.println("Broker ID: " + router.brokerid + " closed");
+                    System.out.println("Market ID: " + router.marketid + " closed");
                     close = true;
                 }
             }
@@ -122,17 +117,14 @@ public class ServerConnection extends Thread{
     public void run(){//overwriting the run() function in thread
         os = new OutputStreamWriter(socket.getOutputStream());
         out = new PrintWriter(os);
-        System.out.println("do you even enter");
         if (router.marketid > 99999){
             router.pair.put(router.brokerid, router.i);
-            System.out.println(i);
             while(router.BrokerList.size() <= router.i)
                 router.i--;
             i = router.i;
             router.i++;
             idSent = false;
             while (true) {
-                System.out.println("apparently you do");
                 if(close){
                     ServerConnection mr = router.MarketList.get(i);
                     ServerConnection br = router.BrokerList.get(i);
@@ -141,9 +133,10 @@ public class ServerConnection extends Thread{
                     router.MarketList.remove(i);
                     br.socket.close();
                     router.BrokerList.remove(i);
+                    router.pair.remove(i);
                     os.close();
                     out.close();
-                    System.out.println("Everything closed");
+                    System.out.println("Everything closed between Broker: "+ router.brokerid+" and Market: "+ router.marketid);
                     break;
                 }
                 else{
