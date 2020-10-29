@@ -77,7 +77,7 @@ public class Broker {
                 fixMsg = fixStart + fixMsg;
                 checksum = "|10=" + checksum(fixMsg);
                 fixMsg = fixMsg + checksum;
-                System.out.println("FIX MESSAGE " + fixMsg);
+                //System.out.println("FIX MESSAGE " + fixMsg);
                 sendMsg(s, fixMsg);
 
                 //wait for reply then do XYZ
@@ -113,7 +113,7 @@ public class Broker {
                 fixMsg = fixStart + fixMsg;
                 checksum = "|10=" + checksum(fixMsg);
                 fixMsg = fixMsg + checksum;
-                System.out.println("FIX MESSAGE " + fixMsg);
+                //System.out.println("FIX MESSAGE " + fixMsg);
                 sendMsg(s, fixMsg);
 
                 //wait for reply then do XYZ
@@ -320,7 +320,7 @@ public class Broker {
 
     public static String readMsg(Socket s) {
         String str = null;
-        System.out.println("Reading ...");
+        //System.out.println("Reading ...");
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
             str = br.readLine();
